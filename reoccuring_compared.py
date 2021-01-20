@@ -43,5 +43,8 @@ daysToYears(days)
 days = time(p, r, n, saving, a)
 daysToYears(days)
 
-days = time(p, r, n, saving+3500, a)
+days = time(p, r, n, saving+1500, a)
+daysToYears(days)
+
+days = time(p, 0.08, n, saving+1500, a)
 daysToYears(days)
