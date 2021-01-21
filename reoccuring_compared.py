@@ -10,13 +10,15 @@ daily = float(1.0/365.0)
 # Compounding monthly and incrementing daily
 #100 a month / 365
 
+daysInMonth = 30.42
+
 def time(p, r, n, saving, a):
-    print("This is if you save $" + str(saving)+ " a month")
+    print("This is if you save $" + str(saving) + " a month")
     days = 0
     curA = 0.0
     while curA < a:
         curA = p*(1.0 + r/n)**(n*daily)
-        p = curA+(saving/30.42)
+        p = curA+(saving/daysInMonth)
         days += 1
     return days
 
@@ -26,9 +28,9 @@ def daysToYears(days):
         years += 1
         days -= 365
     print(str(years) + " years")
-    while((days - 30.42) > 0):
+    while((days - daysInMonth) > 0):
         months += 1
-        days -= 30.42
+        days -= daysInMonth
     print(str(months) + " months")
     while((days - 7) > 0):
         weeks += 1
