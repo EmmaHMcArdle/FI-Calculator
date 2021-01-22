@@ -16,14 +16,13 @@ def index():
 
 @app.route("/calculator", methods=['GET', 'POST'])
 def calculator():
-    form = OneTimeForm()
-    return render_template("one_time.html", form=form)
+    form = CalcForm()
+    if form.validate_on_submit():
+        a = form.query.get()
+    else:
+        return render_template("calculator.html", form=form)
 
-@app.route("/reoccuring_calculator")
-def reoccuring_calculator():
-    return render_template("reoccuring_calc.html")
-
-class OneTimeForm(FlaskForm):
+class CalcForm(FlaskForm):
     financialGoal = FloatField('Financial Goal', validators=[DataRequired()])
     invested = FloatField('Invested', validators=[DataRequired()])
     annualRate = FloatField("Annual Rate", validators=[DataRequired()])
@@ -33,8 +32,11 @@ class OneTimeForm(FlaskForm):
                                 (26, 'Bi-Weekly (26/year)'), (24, 'Semi-Monthly (24/year)'), 
                                 (12, 'Monthly (12/year)'), (6, 'Bi-Monthly (6/year)'),
                                 (4, 'Quarterly (4/year)'), (2, 'Semi-Annually (2/year)'), (1, 'Annually (1/year)')])
-    oneTimeInvestment = FloatField('One-Time Investment', validators=[DataRequired()])
+    oneTimeInvestment = FloatField('One-Time Investment')
+    continuousInvestment = FloatField("Continuous Investment")
     submit = SubmitField("Calculate Time Saved")
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
