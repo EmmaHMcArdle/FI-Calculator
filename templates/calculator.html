@@ -51,7 +51,7 @@
                 </div>
                 <br>
                 <div class="form-group">
-                    <label>Compound Frequency</label>
+                    {{ form.compoundFreq.label(class="form-control-label") }}
                     <select name="freq" id='freq'>
                     {% for freq in form.compoundFreq %}
                         <option value="{{ freq }}">{{ freq.label }}</option>
@@ -85,6 +85,34 @@
                     {%else %}
                         {{ form.continuousInvestment(class="form-control form-control-lg") }}
                     {% endif %}
+                </div>
+                <br>
+                <div class="form-group">
+                    {{ form.investmentFreq.label(class="form-control-label") }}
+                    <select name="freq" id='freq'>
+                    {% for freq in form.compoundFreq %}
+                        <option value="{{ freq }}">{{ freq.label }}</option>
+                    {% endfor %}
+                    </select>
+                </div>
+                <br>
+                <!-- <div class="form-group">
+                    {{ form.annRate.label(class="form-control-label") }}
+                    {{ form.annRate() }} -->
+                    <!-- {% if form.annRate.errors %}
+                        {{ form.annRate(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.annRate.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {%else %}
+                        {{ form.annRate(class="form-control form-control-lg") }}
+                    {% endif %} -->
+                </div>
+                <br>
+                <div>
+                    <input type="number" value="7" step="0.01" max="100">
                 </div>
             </fieldset>
             <br>

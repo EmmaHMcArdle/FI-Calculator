@@ -7,7 +7,7 @@ a = 1000000.0 #float(input("Enter in your fire number "))
 p = 50000.0 #float(input("Enter in the money you have invested "))
 r = 0.07 #float(input("Enter in your estimate rate of return "))
 n = 12 # assuming monthly compound interest
-saving = 650 #amount saving
+repeatSavings = 650 #amount saved continuously
 
 t = (math.log(a/p)) / (n*(math.log(1 + (r/n))))
 
@@ -48,7 +48,7 @@ calculate_time(t)
 
 print("")
 print("This is how long until FIRE if you save amount:")
-p += saving
+p += repeatSavings
 afterT = (math.log(a/p)) / (n*(math.log(1 + (r/n))))
 
 print("After calculated time: " + str(afterT))
