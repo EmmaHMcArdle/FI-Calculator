@@ -7,7 +7,7 @@
             <!-- crsf token -->
             {{ form.hidden_tag() }}
             <fieldset class="form-group">
-                <legend class="border-bottom mb-4">One-Time Payment Calculator</legend>
+                <legend class="border-bottom mb-4">Long Term Difference Payment Calculator</legend>
                 <div class="form-group">
                     {{ form.financialGoal.label(class="form-control-label") }}
                     {% if form.financialGoal.errors %}
@@ -46,7 +46,8 @@
                             {% endfor %}
                         </div>
                     {%else %}
-                        {{ form.annualRate(class="form-control form-control-lg") }}
+                    <!-- <input type="number" class="form-control form-control-lg" value="7" step="0.01" max="100"> -->
+                        {{ form.annualRate(type="number", step="0.01", class="form-control form-control-lg") }}
                     {% endif %}
                 </div>
                 <br>
@@ -96,24 +97,6 @@
                     </select>
                 </div>
                 <br>
-                <!-- <div class="form-group">
-                    {{ form.annRate.label(class="form-control-label") }}
-                    {{ form.annRate() }} -->
-                    <!-- {% if form.annRate.errors %}
-                        {{ form.annRate(class="form-control form-control-lg is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in form.annRate.errors %}
-                                <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    {%else %}
-                        {{ form.annRate(class="form-control form-control-lg") }}
-                    {% endif %} -->
-                </div>
-                <br>
-                <div>
-                    <input type="number" value="7" step="0.01" max="100">
-                </div>
             </fieldset>
             <br>
             <div class="form-group">

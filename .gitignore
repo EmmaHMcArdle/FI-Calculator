@@ -3,4 +3,4 @@ venv/
 config.py
 __pycache__
 calc_env/
-
+*.pyc
