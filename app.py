@@ -37,23 +37,25 @@ class CalcForm(FlaskForm):
 @app.route("/calculator", methods=['GET', 'POST'])
 def calculator():
     form = CalcForm()
+    form.investmentFreq.process_data(12)
     if request.method=="POST":
         a = form.financialGoal.data
-        session['Goal'] = a
+        # if a != None:
+        session['Goal'] = str(a)
         p = form.invested.data
-        session['Principal'] = p
+        session['Principal'] = str(p)
         r = form.annualRate.data
-        session['Annual Rate'] = r
+        session['Annual Rate'] = str(r)
         n = form.compoundFreq.data
         session['Compound Frequency'] = n
         oneTimeSaving = form.oneTimeInvestment.data
-        session['One Time Savings'] = oneTimeSaving
+        session['One Time Savings'] = str(oneTimeSaving)
         contSaving = form.continuousInvestment.data
-        session['Continuous Savings'] = contSaving
+        session['Continuous Savings'] = str(contSaving)
         freq = form.investmentFreq.data
         session['Investment Frequency'] = freq
         # if saving != None:
-            
+       
         return redirect(url_for('results'))
     else:
         return render_template("calculator.html", form=form)
@@ -61,8 +63,15 @@ def calculator():
 @app.route("/results")
 def results():
     a = session.get('Goal', None)
-
-    return render_template("results.html")
+    p = session.get('Principal', None)
+    r = session.get('Annual Rate', None)
+    n = session.get('Compound Frequency', None)
+    oneTimeSaving = session.get('One Time Savings', None)
+    contSaving = session.get("Continuous Savings", None)
+    freq = session.get("Investment Frequency", None)
+    print(type(n))
+    original = calculations.originalTimeline(complex(a),complex(p),float(n),float(r))
+    return render_template("results.html", a=a, p=p, r=r, n=n, original=original)
 
 
 if __name__ == '__main__':

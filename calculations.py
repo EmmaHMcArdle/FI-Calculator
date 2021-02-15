@@ -89,14 +89,14 @@ print("You saved this amount of your time:")
 # calculate_diff(t, afterTime)
 
 # For continuous Payments
-days = continuousPaymentTimeline(p, r, n, 0, a)
+days = continuousPaymentTimeline(50000, 0.07, n, 0, a)
 daysToYears(days)
 
-days = continuousPaymentTimeline(p, r, n, repeatSavings, a)
-daysToYears(days)
+# days = continuousPaymentTimeline(p, r, n, repeatSavings, a)
+# daysToYears(days)
 
-days = continuousPaymentTimeline(p, r, n, repeatSavings+1500, a)
-daysToYears(days)
+# days = continuousPaymentTimeline(p, r, n, repeatSavings+1500, a)
+# daysToYears(days)
 
-days = continuousPaymentTimeline(p, 0.08, n, repeatSavings+1500, a)
-daysToYears(days)
+# days = continuousPaymentTimeline(p, 0.08, n, repeatSavings+1500, a)
+# daysToYears(days)

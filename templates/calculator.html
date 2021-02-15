@@ -92,6 +92,9 @@
                     {{ form.investmentFreq.label(class="form-control-label") }}
                     <select name="freq" id='freq'>
                     {% for freq in form.compoundFreq %}
+                        if freq == 12:
+                            <option value="{{ freq }} "selected>{{ freq.label }}</option>
+                        else:
                         <option value="{{ freq }}">{{ freq.label }}</option>
                     {% endfor %}
                     </select>
