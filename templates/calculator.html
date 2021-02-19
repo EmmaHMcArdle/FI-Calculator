@@ -5,9 +5,9 @@
     <div class="content-section">
         <form method="POST" action="">
             <!-- crsf token -->
-            {{ form.hidden_tag() }}
             <fieldset class="form-group">
                 <legend class="border-bottom mb-4">Long Term Difference Payment Calculator</legend>
+                {{form.test.label}} {{form.test()}}
                 <div class="form-group">
                     {{ form.financialGoal.label(class="form-control-label") }}
                     {% if form.financialGoal.errors %}
@@ -52,12 +52,7 @@
                 </div>
                 <br>
                 <div class="form-group">
-                    {{ form.compoundFreq.label(class="form-control-label") }}
-                    <select name="freq" id='freq'>
-                    {% for freq in form.compoundFreq %}
-                        <option value="{{ freq }}">{{ freq.label }}</option>
-                    {% endfor %}
-                    </select>
+                    {{form.compoundFreq.label}} {{form.compoundFreq()}}
                 </div>
                 <br>
                 <div class="form-group">
@@ -89,15 +84,7 @@
                 </div>
                 <br>
                 <div class="form-group">
-                    {{ form.investmentFreq.label(class="form-control-label") }}
-                    <select name="freq" id='freq'>
-                    {% for freq in form.compoundFreq %}
-                        if freq == 12:
-                            <option value="{{ freq }} "selected>{{ freq.label }}</option>
-                        else:
-                        <option value="{{ freq }}">{{ freq.label }}</option>
-                    {% endfor %}
-                    </select>
+                    {{form.investmentFreq.label}} {{form.investmentFreq()}}
                 </div>
                 <br>
             </fieldset>
