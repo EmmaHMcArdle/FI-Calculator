@@ -7,8 +7,8 @@
             <!-- crsf token -->
             <fieldset class="form-group">
                 <legend class="border-bottom mb-4">Long Term Difference Payment Calculator</legend>
-                {{form.test.label}} {{form.test()}}
                 <div class="form-group">
+                    <!-- form.test.label form.test()in jinja expression brackets -->
                     {{ form.financialGoal.label(class="form-control-label") }}
                     {% if form.financialGoal.errors %}
                         {{ form.financialGoal(class="form-control form-control-lg is-invalid") }}

@@ -3,6 +3,22 @@
 {% block content %}
     <a href="/calculator">FIRE Calculator</a>
 
-    <h2>Time to FI if you did nothing</h2>
-    <h3>Original Timeline Calculated:<span>{{ original }} years</span></h3>
+    <h1>Time to FI if you stopped saving for FI</h1>
+
+    <h2>Goal: <span>${{ a }}</span></h2>
+    <br>
+    <h2>Principal: <span>${{ p }}</span></h2>
+    <br>
+    <h2>Annual Rate: <span>{{ r }}%</span></h2>
+    <br>
+    <h2>Compound Frequency: <span>{{ n }}/year</span></h2>
+    <br>
+    <h3>Original Timeline Calculated: <br><span>{{ original }} years</span></h3>
+    <br>
+    <h3>Original Timeline Broken Down: <br><span>{{ timelineStr }}</span></h3>
+    <br>
+    <h3>After Timeline Calculated:<br><span>{{ after }} years</span></h3>
+    <br>
+    <h3>After Timeline Broken Down: <br><span>{{ afterTimelineStr }}</span></h3>
+    
 {% endblock content %}

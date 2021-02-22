@@ -20,15 +20,14 @@ class MyFloatField(FloatField):
     def process_formdata(self, valuelist):
         if valuelist:
             try:
-                self.data = float(valuelist[0].strip('$').replace(',', '.'))
+                self.data = float(valuelist[0].replace(',', '').replace("$", ""))
             except ValueError:
                 self.data = None
                 raise ValueError(self.gettext('Not a valid float value'))
 
 class CalcForm(FlaskForm):
-    test = MyFloatField('Hi')
-    financialGoal = DecimalField('Financial Goal', validators=[DataRequired()])
-    invested = DecimalField('Invested', validators=[DataRequired()])
+    financialGoal = MyFloatField('Financial Goal', validators=[DataRequired()])
+    invested = MyFloatField('Currently Invested', validators=[DataRequired()])
     annualRate = DecimalField("Annual Rate %", validators=[DataRequired()])
     # Do I need data required if automatic default?
     compoundFreq = SelectField('Compound Frequency', choices=[(365, 'Daily (365/year)'), 
@@ -36,8 +35,8 @@ class CalcForm(FlaskForm):
                                 (26, 'Bi-Weekly (26/year)'), (24, 'Semi-Monthly (24/year)'), 
                                 (12, 'Monthly (12/year)'), (6, 'Bi-Monthly (6/year)'),
                                 (4, 'Quarterly (4/year)'), (2, 'Semi-Annually (2/year)'), (1, 'Annually (1/year)')], default=12)
-    oneTimeInvestment = DecimalField('One-Time Investment')
-    continuousInvestment = DecimalField("Continuous Investment")
+    oneTimeInvestment = MyFloatField('One-Time Investment')
+    continuousInvestment = MyFloatField('Continuous Investment')
     investmentFreq = SelectField("Investment Frequency", choices=[(365, 'Daily (365/year)'), 
                                 (360, 'Daily (360/year)'), (52, 'Weekly (52/year)'), 
                                 (26, 'Bi-Weekly (26/year)'), (24, 'Semi-Monthly (24/year)'), 
@@ -50,24 +49,19 @@ def calculator():
     form = CalcForm()
     form.investmentFreq.process_data(12)
     if request.method=="POST":
-        a = form.financialGoal.data
-        # if a != None:
-        session['Goal'] = str(a)
-        p = form.invested.data
-        session['Principal'] = str(p)
-        r = form.annualRate.data
-        session['Annual Rate'] = str(r)
-        n = form.compoundFreq.data
-        session['Compound Frequency'] = n
+        session['Goal'] = str((form.financialGoal.data))
+        session['Principal'] = str(form.invested.data)
+        session['Annual Rate'] = str(form.annualRate.data)
+        session['Compound Frequency'] = form.compoundFreq.data
         oneTimeSaving = form.oneTimeInvestment.data
-        session['One Time Savings'] = str(oneTimeSaving)
-        print(session['One Time Savings'])
+        if oneTimeSaving != None:
+            session['One Time Savings'] = str(oneTimeSaving)
+            print(session['One Time Savings'])
         contSaving = form.continuousInvestment.data
-        session['Continuous Savings'] = str(contSaving)
-        freq = form.investmentFreq.data
-        session['Investment Frequency'] = freq
-        # if saving != None:
-       
+        if contSaving != None:
+            session['Continuous Savings'] = str(contSaving)
+            freq = form.investmentFreq.data
+            session['Investment Frequency'] = freq
         return redirect(url_for('results'))
     else:
         return render_template("calculator.html", form=form)
@@ -79,14 +73,18 @@ def results():
     r = session.get('Annual Rate', None)
     n = session.get('Compound Frequency', None)
     oneTimeSaving = session.get('One Time Savings', None)
-    print(f"One time {oneTimeSaving}")
     contSaving = session.get("Continuous Savings", None)
     freq = session.get("Investment Frequency", None)
-    print(type(a))
-    print(type(n))
-    original = calculations.originalTimeline(float(a),float(p),float(n),float(r))
-    # if oneTimeSavings != 0:
-    return render_template("results.html", a=a, p=p, r=r, n=n, original=original)
+    if oneTimeSaving != None:
+        after = calculations.calcTimeline(float(a),float(float(p)+float(oneTimeSaving)),float(n),float(r))
+        afterTimelineStr = calculations.daysToYears(after)
+    original = calculations.calcTimeline(float(a),float(p),float(n),float(r))
+    timelineStr = calculations.daysToYears(original)
+    
+
+    return render_template("results.html", a=a, p=p, r=r, n=n, 
+                            timelineStr=timelineStr, original=round(original, 2), 
+                            after=round(after, 2), afterTimelineStr=afterTimelineStr)
 
 
 if __name__ == '__main__':
