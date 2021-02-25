@@ -75,16 +75,26 @@ def results():
     oneTimeSaving = session.get('One Time Savings', None)
     contSaving = session.get("Continuous Savings", None)
     freq = session.get("Investment Frequency", None)
-    if oneTimeSaving != None:
+    print("frequency: " + freq)
+    if oneTimeSaving != None and contSaving != None:
+        after = calculations.continuousPaymentTimeline(float(a),float(float(p)+float(oneTimeSaving)),float(n),float(r), float(contSaving), int(freq))
+        afterTimelineStr = calculations.daysToTotal(after)
+        after = calculations.daysToYears(after)
+    elif oneTimeSaving != None:
         after = calculations.calcTimeline(float(a),float(float(p)+float(oneTimeSaving)),float(n),float(r))
-        afterTimelineStr = calculations.daysToYears(after)
+        afterTimelineStr = calculations.yearsToTotal(after)
+    elif contSaving != None:
+        after = calculations.continuousPaymentTimeline(float(a),float(p),float(n),float(r), float(contSaving), int(freq))
+        afterTimelineStr = calculations.daysToTotal(after)
+        after = calculations.daysToYears(after)
+    else:
+        afterTimelineStr = None
     original = calculations.calcTimeline(float(a),float(p),float(n),float(r))
-    timelineStr = calculations.daysToYears(original)
-    
-
+    timelineStr = calculations.yearsToTotal(original)
+    diff = calculations.calculate_diff(original, after)
     return render_template("results.html", a=a, p=p, r=r, n=n, 
                             timelineStr=timelineStr, original=round(original, 2), 
-                            after=round(after, 2), afterTimelineStr=afterTimelineStr)
+                            after=round(after, 2), afterTimelineStr=afterTimelineStr, diff = diff)
 
 
 if __name__ == '__main__':

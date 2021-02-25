@@ -13,12 +13,14 @@
     <br>
     <h2>Compound Frequency: <span>{{ n }}/year</span></h2>
     <br>
-    <h3>Original Timeline Calculated: <br><span>{{ original }} years</span></h3>
+    <!-- <h3>Original Timeline Calculated: <br><span>{{ original }} years</span></h3> -->
+    <!-- <br> -->
+    <h3>Original Timeline: <br><span>{{ timelineStr }}</span></h3>
     <br>
-    <h3>Original Timeline Broken Down: <br><span>{{ timelineStr }}</span></h3>
+    <!-- <h3>After Timeline Calculated:<br><span>{{ after }}</span></h3> -->
+    <!-- <br> -->
+    <h3>After Timeline: <br><span>{{ afterTimelineStr }}</span></h3>
     <br>
-    <h3>After Timeline Calculated:<br><span>{{ after }} years</span></h3>
-    <br>
-    <h3>After Timeline Broken Down: <br><span>{{ afterTimelineStr }}</span></h3>
+    <h3>Time Saved: <br><span>{{ diff }}</span></h3>
     
 {% endblock content %}

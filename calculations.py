@@ -7,105 +7,88 @@ import numpy as np
 # n = 12 # assuming monthly compound interest
 # oneTimeSavings = 1500.0
 # repeatSavings = 650 #amount saved continuously
-# #For continuous
-daily = float(1.0/365.0)
-# Compounding monthly and incrementing daily
-#100 a month / 365
-
-daysInMonth = 30.42
 
 def calcTimeline(a, p, n, r):
     r = (r/100) # 0.07/12
     return (np.log(a/p)) / (n*(np.log(1 + (r/n))))
 
-def continuousPaymentTimeline(p, r, n, saving, a):
-    print("This is if you save $" + str(saving) + " a month")
+def continuousPaymentTimeline(a, p, n, r, saving, freq):
+    # print("This is if you save $" + str(saving) + " a month")
+    daily = float(1.0/365.0)
+    print("Freq: " + str(freq))
+    print("N: " + str(n))
+    r = (r/100)
     days = 0
     curA = 0.0
+    daysInAFreq = 365.0/freq
+    print("Freq in a year: " + str(daysInAFreq))
     while curA < a:
-        curA = p*(1.0 + r/n)**(n*daily)
-        p = curA+(saving/daysInMonth)
+        # Compounding future value FV = $10,000 x (1 + 15%/1))^(1 x 1)
+        # For one Day!
+        curA = p*((1.0 + r/n)**(n*daily))
+        #curA = curA - a/
+        # Take today's principal + add that you're contributing
+        p = curA + (saving / daysInAFreq)
         days += 1
     return days
 
-
-# print("Originally calculated time: " + str(originalTimeline(a, p, n, r)))
-
-titles = ["month", "week", "day", "hour"]
-intervals = [12, 4.345, 7, 24]
-
-def daysToYears(time):
+def yearsToTotal(time):
+    titles = ["month", "week", "day", "hour"]
+    intervals = [12, 4.345, 7, 24]
     print("Total time" + str(time))
     timelineStr = ""
     if time <= 0:
         timelineStr = "You're already financially independent!"
     else:
-        timelineStr += (str(int(time)) + " years ")
+        timelineStr += " " + (str(int(time)) + " years ")
         for i in range(4):
             # t is a float, while int(t) is a integer so it automatically removes anything after decimal
             time = ((time - int(time)) * intervals[i])
             if int(time) > 0:
                 if int(time) > 1:
-                    timelineStr += (str(int(time)) + " " + titles[i] + "s ")
+                    timelineStr += " " + (str(int(time)) + " " + titles[i] + "s ")
                 else:
-                    timelineStr += (str(int(time)) + " " + titles[i] + " ")
-    
+                    timelineStr += " " + (str(int(time)) + " " + titles[i] + " ")
     return timelineStr
 
-# def daysToYears(days):
-#     months = weeks = years = 0
-#     while ((days - 365) > 0):
-#         years += 1
-#         days -= 365
-#     print(str(years) + " years")
-#     while((days - daysInMonth) > 0):
-#         months += 1
-#         days -= daysInMonth
-#     print(str(months) + " months")
-#     while((days - 7) > 0):
-#         weeks += 1
-#         days -= 7
-#     print(str(weeks) + " weeks")
-#     print(str(int(days)) + " days")
-#     print("")
+def daysToTotal(days):
+    daysInMonth = 30.42
+    timeLineStr = ""
+    months = weeks = years = 0
+    while ((days - 365) > 0):
+        years += 1
+        days -= 365
+    timeLineStr += " " + (str(years) + " years")
+    while((days - daysInMonth) > 0):
+        months += 1
+        days -= daysInMonth
+    timeLineStr += " " + (str(months) + " months")
+    while((days - 7) > 0):
+        weeks += 1
+        days -= 7
+    timeLineStr += " " + (str(weeks) + " weeks")
+    timeLineStr += " " + (str(int(days)) + " days")
+    return timeLineStr
         
+def daysToYears(days):
+    print("Days" + str(days))
+    return days*0.00273973
 
 def calculate_diff(originTime, afterTime):
+    print("Origin" + str(originTime))
+    print("after" + str(afterTime))
+    titles = ["month", "week", "day", "hour"]
+    intervals = [12, 4.345, 7, 24]
     newT = originTime - afterTime
+    diffStr = ""
     print(newT)
     if int(newT) != 0:
-        print(str(int(newT)) + " years")
+        diffStr += " " + str(int(newT)) + " years"
     for i in range(4):
         newT = (newT - int(newT)) * intervals[i]
         if int(newT) > 0:
             if int(newT) > 1:
-                print(str(int(newT)) + " " + titles[i] + "s")
+                diffStr += " " + (str(int(newT)) + " " + titles[i] + "s")
             else:
-                print(str(int(newT)) + " " + titles[i])
-
-# daysToYears(time)
-
-
-# print("")
-# print("This is how long until FIRE if you save amount:")
-# p += repeatSavings
-# afterTime = (math.log(a/p)) / (n*(math.log(1 + (r/n))))
-
-# print("After calculated time: " + str(afterTime))
-# daysToYears(afterTime)
-# print("")
-# print("You saved this amount of your time:")
-# # calculate_diff(t, afterTime)
-
-# # For continuous Payments
-# days = continuousPaymentTimeline(50000, 0.07, n, 0, a)
-# daysToYears(days)
-
-# days = continuousPaymentTimeline(p, r, n, repeatSavings, a)
-# daysToYears(days)
-
-# days = continuousPaymentTimeline(p, r, n, repeatSavings+1500, a)
-# daysToYears(days)
-
-# days = continuousPaymentTimeline(p, 0.08, n, repeatSavings+1500, a)
-# daysToYears(days)
+                diffStr += " " + (str(int(newT)) + " " + titles[i])
+    return diffStr

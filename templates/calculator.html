@@ -18,7 +18,7 @@
                             {% endfor %}
                         </div>
                     {% else %}
-                        {{ form.financialGoal(class="form-control form-control-label") }}
+                        <br>${{ form.financialGoal() }}
                     {% endif %}
                 </div>
                 <br>
@@ -32,7 +32,7 @@
                             {% endfor %}
                         </div>
                     {%else %}
-                        {{ form.invested(class="form-control form-control-lg") }}
+                        <br> ${{ form.invested() }}
                     {% endif %}
                 </div>
                 <br>
@@ -65,7 +65,7 @@
                             {% endfor %}
                         </div>
                     {%else %}
-                        {{ form.oneTimeInvestment(class="form-control form-control-lg") }}
+                       <br>$ {{ form.oneTimeInvestment() }}
                     {% endif %}
                 </div>
                 <br>
@@ -79,7 +79,7 @@
                             {% endfor %}
                         </div>
                     {%else %}
-                        {{ form.continuousInvestment(class="form-control form-control-lg") }}
+                    <br>$ {{ form.continuousInvestment() }}
                     {% endif %}
                 </div>
                 <br>
