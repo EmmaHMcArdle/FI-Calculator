@@ -3,7 +3,7 @@
 {% block content %}
     <a href="/calculator">FIRE Calculator</a>
 
-    <h1>Time to FI if you stopped saving for FI</h1>
+    <h1>Change in Retirement Date</h1>
 
     <h2>Goal: <span>${{ a }}</span></h2>
     <br>
@@ -11,16 +11,24 @@
     <br>
     <h2>Annual Rate: <span>{{ r }}%</span></h2>
     <br>
-    <h2>Compound Frequency: <span>{{ n }}/year</span></h2>
+    <h2>Compound Frequency: <span>{{ nFreqLabel }}</span></h2>
     <br>
-    <!-- <h3>Original Timeline Calculated: <br><span>{{ original }} years</span></h3> -->
-    <!-- <br> -->
-    <h3>Original Timeline: <br><span>{{ timelineStr }}</span></h3>
+    <h3>Time to FI if you stopped saving for FI</h3>
+    <h3>Original Timeline: <br><span>{{ originalTimelineStr }}</span></h3>
     <br>
-    <!-- <h3>After Timeline Calculated:<br><span>{{ after }}</span></h3> -->
-    <!-- <br> -->
-    <h3>After Timeline: <br><span>{{ afterTimelineStr }}</span></h3>
-    <br>
-    <h3>Time Saved: <br><span>{{ diff }}</span></h3>
+    {% if differenceInTime != None: %}
+        <h3>Time to FI with: </h3>
+        {% if oneTimeSaving != None: %}
+            <h4>A one-time payment of <span>${{ oneTimeSaving }}</span></h4>
+        {% endif %}
+        {% if contSaving != None: %}
+            <h4>A continuous payment of <span>${{ contSaving }} {{ investFreqLabel }}</span></h4>
+        {% endif %}
+        <h3>After Timeline: <br><span>{{ afterTimelineStr }}</span></h3>
+        <br>
+        {% if diff != None: %}
+            <h3>Time Saved: <br><span>{{ diff }}</span></h3>
+        {% endif %}
+    {% endif %}
     
 {% endblock content %}

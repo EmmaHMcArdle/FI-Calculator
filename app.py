@@ -49,19 +49,25 @@ def calculator():
     form = CalcForm()
     form.investmentFreq.process_data(12)
     if request.method=="POST":
+        # Turn from unicode (from .data) to string
         session['Goal'] = str((form.financialGoal.data))
         session['Principal'] = str(form.invested.data)
         session['Annual Rate'] = str(form.annualRate.data)
-        session['Compound Frequency'] = form.compoundFreq.data
+        n = form.compoundFreq.data
+        session['Compound Frequency'] = str(n)
+        # Grab the value from the SelectField to pass into Results.html
+        nFreqLabel = dict(form.compoundFreq.choices).get(int(n))
+        session['Compound Frequency Label'] = nFreqLabel
         oneTimeSaving = form.oneTimeInvestment.data
-        if oneTimeSaving != None:
-            session['One Time Savings'] = str(oneTimeSaving)
-            print(session['One Time Savings'])
+        session['One Time Savings'] = oneTimeSaving
         contSaving = form.continuousInvestment.data
+        session['Continuous Savings'] = contSaving
         if contSaving != None:
-            session['Continuous Savings'] = str(contSaving)
             freq = form.investmentFreq.data
             session['Investment Frequency'] = freq
+            # Get the invest frequency label to pass into HTML on results page
+            investFreqLabel = dict(form.investmentFreq.choices).get(int(freq))
+            session['Investment Frequency Label'] = investFreqLabel
         return redirect(url_for('results'))
     else:
         return render_template("calculator.html", form=form)
@@ -72,29 +78,40 @@ def results():
     p = session.get('Principal', None)
     r = session.get('Annual Rate', None)
     n = session.get('Compound Frequency', None)
+    nFreqLabel = session.get('Compound Frequency Label', None)
+    print(type(nFreqLabel))
+    print("NLabel: " + str(nFreqLabel))
     oneTimeSaving = session.get('One Time Savings', None)
     contSaving = session.get("Continuous Savings", None)
     freq = session.get("Investment Frequency", None)
-    print("frequency: " + freq)
+    investFreqLabel = session.get('Investment Frequency Label', None)
+    
+    # Calculate original timeline 
+    originalTimelineInYears = calculations.calcTimeline(float(a),float(p),float(n),float(r))
+    originalTimelineStr = calculations.yearsToTotal(originalTimelineInYears)
+    
+    # Depending on whether or not adding a one time or continuous payment
     if oneTimeSaving != None and contSaving != None:
-        after = calculations.continuousPaymentTimeline(float(a),float(float(p)+float(oneTimeSaving)),float(n),float(r), float(contSaving), int(freq))
-        afterTimelineStr = calculations.daysToTotal(after)
-        after = calculations.daysToYears(after)
+        postSavingsTimelineInDays = calculations.continuousPaymentTimeline(float(a),float(float(p)+float(oneTimeSaving)),float(n),float(r), float(contSaving), int(freq))
+        postSavingsTimelineStr = calculations.daysToTotal(postSavingsTimelineInDays)
+        postSavingsTimelineInYears = calculations.daysToYears(postSavingsTimelineInDays)
+        differenceInTime = calculations.calculate_diff(originalTimelineInYears, postSavingsTimelineInYears)
     elif oneTimeSaving != None:
-        after = calculations.calcTimeline(float(a),float(float(p)+float(oneTimeSaving)),float(n),float(r))
-        afterTimelineStr = calculations.yearsToTotal(after)
+        postSavingsTimelineInYears = calculations.calcTimeline(float(a),float(float(p)+float(oneTimeSaving)),float(n),float(r))
+        postSavingsTimelineStr = calculations.yearsToTotal(postSavingsTimelineInYears)
+        differenceInTime = calculations.calculate_diff(originalTimelineInYears, postSavingsTimelineInYears)
     elif contSaving != None:
-        after = calculations.continuousPaymentTimeline(float(a),float(p),float(n),float(r), float(contSaving), int(freq))
-        afterTimelineStr = calculations.daysToTotal(after)
-        after = calculations.daysToYears(after)
+        postSavingsTimelineInDays = calculations.continuousPaymentTimeline(float(a),float(p),float(n),float(r), float(contSaving), int(freq))
+        postSavingsTimelineStr = calculations.daysToTotal(postSavingsTimelineInDays)
+        postSavingsTimelineInYears = calculations.daysToYears(postSavingsTimelineInDays)
+        differenceInTime  = calculations.calculate_diff(originalTimelineInYears, postSavingsTimelineInYears)
     else:
-        afterTimelineStr = None
-    original = calculations.calcTimeline(float(a),float(p),float(n),float(r))
-    timelineStr = calculations.yearsToTotal(original)
-    diff = calculations.calculate_diff(original, after)
-    return render_template("results.html", a=a, p=p, r=r, n=n, 
-                            timelineStr=timelineStr, original=round(original, 2), 
-                            after=round(after, 2), afterTimelineStr=afterTimelineStr, diff = diff)
+        postSavingsTimelineStr = None
+        differenceInTime = None
+    return render_template("results.html", a=a, p=p, r=r, nFreqLabel=nFreqLabel, originalTimelineStr=originalTimelineStr,
+                            originalTimelineInYears=round(originalTimelineInYears, 2), 
+                            postSavingsTimelineStr=postSavingsTimelineStr, differenceInTime = differenceInTime,
+                            oneTimeSaving=oneTimeSaving, contSaving=contSaving, investFreqLabel=investFreqLabel)
 
 
 if __name__ == '__main__':

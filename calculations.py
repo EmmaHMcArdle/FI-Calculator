@@ -13,15 +13,11 @@ def calcTimeline(a, p, n, r):
     return (np.log(a/p)) / (n*(np.log(1 + (r/n))))
 
 def continuousPaymentTimeline(a, p, n, r, saving, freq):
-    # print("This is if you save $" + str(saving) + " a month")
     daily = float(1.0/365.0)
-    print("Freq: " + str(freq))
-    print("N: " + str(n))
     r = (r/100)
     days = 0
     curA = 0.0
     daysInAFreq = 365.0/freq
-    print("Freq in a year: " + str(daysInAFreq))
     while curA < a:
         # Compounding future value FV = $10,000 x (1 + 15%/1))^(1 x 1)
         # For one Day!
@@ -35,7 +31,6 @@ def continuousPaymentTimeline(a, p, n, r, saving, freq):
 def yearsToTotal(time):
     titles = ["month", "week", "day", "hour"]
     intervals = [12, 4.345, 7, 24]
-    print("Total time" + str(time))
     timelineStr = ""
     if time <= 0:
         timelineStr = "You're already financially independent!"
@@ -71,17 +66,14 @@ def daysToTotal(days):
     return timeLineStr
         
 def daysToYears(days):
-    print("Days" + str(days))
+    # Might round in going in HTML round(, 2)
     return days*0.00273973
 
 def calculate_diff(originTime, afterTime):
-    print("Origin" + str(originTime))
-    print("after" + str(afterTime))
     titles = ["month", "week", "day", "hour"]
     intervals = [12, 4.345, 7, 24]
     newT = originTime - afterTime
     diffStr = ""
-    print(newT)
     if int(newT) != 0:
         diffStr += " " + str(int(newT)) + " years"
     for i in range(4):
