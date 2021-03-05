@@ -1,0 +1,26 @@
+* {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+#title {
+    text-align: center;
+}
+
+h2 {
+    color: green;
+}
+
+.fi_detail {
+    text-align: center;
+}
+
+.user_specs {
+    padding: 40px;
+}
+
+.col {
+    border: 2px solid black;
+
+}
