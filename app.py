@@ -50,68 +50,50 @@ def calculator():
     form.investmentFreq.process_data(12)
     if request.method=="POST":
         # Turn from unicode (from .data) to string
-        session['Goal'] = str((form.financialGoal.data))
-        session['Principal'] = str(form.invested.data)
-        session['Annual Rate'] = str(form.annualRate.data)
-        n = form.compoundFreq.data
-        session['Compound Frequency'] = str(n)
-        # Grab the value from the SelectField to pass into Results.html
-        nFreqLabel = dict(form.compoundFreq.choices).get(int(n))
-        session['Compound Frequency Label'] = nFreqLabel
+        goal = str(form.financialGoal.data)
+        principal = form.invested.data
+        annualRate = form.annualRate.data
+        compFreq = form.compoundFreq.data
+        # Grab the value from the SelectField to pass into Results
+        nFreqLabel = dict(form.compoundFreq.choices).get(int(compFreq))
         oneTimeSaving = form.oneTimeInvestment.data
-        session['One Time Savings'] = oneTimeSaving
         contSaving = form.continuousInvestment.data
-        session['Continuous Savings'] = contSaving
         if contSaving != None:
             freq = form.investmentFreq.data
-            session['Investment Frequency'] = freq
-            # Get the invest frequency label to pass into HTML on results page
+            # Get the invest frequency label to pass into HTML in results
             investFreqLabel = dict(form.investmentFreq.choices).get(int(freq))
-            session['Investment Frequency Label'] = investFreqLabel
-        return redirect(url_for('results'))
-    else:
-        return render_template("calculator.html", form=form)
-
-@app.route("/results")
-def results():
-    a = session.get('Goal', None)
-    p = session.get('Principal', None)
-    r = session.get('Annual Rate', None)
-    n = session.get('Compound Frequency', None)
-    nFreqLabel = session.get('Compound Frequency Label', None)
-    print(type(nFreqLabel))
-    print("NLabel: " + str(nFreqLabel))
-    oneTimeSaving = session.get('One Time Savings', None)
-    contSaving = session.get("Continuous Savings", None)
-    freq = session.get("Investment Frequency", None)
-    investFreqLabel = session.get('Investment Frequency Label', None)
-    
-    # Calculate original timeline 
-    originalTimelineInYears = calculations.calcTimeline(float(a),float(p),float(n),float(r))
-    originalTimelineStr = calculations.yearsToTotal(originalTimelineInYears)
-    
-    # Depending on whether or not adding a one time or continuous payment
-    if oneTimeSaving != None and contSaving != None:
-        postSavingsTimelineInDays = calculations.continuousPaymentTimeline(float(a),float(float(p)+float(oneTimeSaving)),float(n),float(r), float(contSaving), int(freq))
-        postSavingsTimelineStr = calculations.daysToTotal(postSavingsTimelineInDays)
-        postSavingsTimelineInYears = calculations.daysToYears(postSavingsTimelineInDays)
-        differenceInTime = calculations.calculate_diff(originalTimelineInYears, postSavingsTimelineInYears)
-    elif oneTimeSaving != None:
-        postSavingsTimelineInYears = calculations.calcTimeline(float(a),float(float(p)+float(oneTimeSaving)),float(n),float(r))
-        postSavingsTimelineStr = calculations.yearsToTotal(postSavingsTimelineInYears)
-        differenceInTime = calculations.calculate_diff(originalTimelineInYears, postSavingsTimelineInYears)
-    elif contSaving != None:
-        postSavingsTimelineInDays = calculations.continuousPaymentTimeline(float(a),float(p),float(n),float(r), float(contSaving), int(freq))
-        postSavingsTimelineStr = calculations.daysToTotal(postSavingsTimelineInDays)
-        postSavingsTimelineInYears = calculations.daysToYears(postSavingsTimelineInDays)
-        differenceInTime  = calculations.calculate_diff(originalTimelineInYears, postSavingsTimelineInYears)
-    else:
-        postSavingsTimelineStr = None
-        differenceInTime = None
-    return render_template("results.html", a=a, p=p, r=r, nFreqLabel=nFreqLabel, originalTimelineStr=originalTimelineStr,
+         
+         # Calculate original timeline 
+        originalTimelineInYears = calculations.calcTimeline(float(goal),float(principal),float(compFreq),float(annualRate))
+        originalTimelineStr = calculations.yearsToTotal(originalTimelineInYears)
+        
+        
+        # Depending on whether or not adding a one time or continuous payment
+        if oneTimeSaving != None and contSaving != None:
+            postSavingsTimelineInDays = calculations.continuousPaymentTimeline(float(goal),float(float(principal)+float(oneTimeSaving)),float(compFreq),float(annualRate), float(contSaving), int(freq))
+            postSavingsTimelineStr = calculations.daysToTotal(postSavingsTimelineInDays)
+            postSavingsTimelineInYears = calculations.daysToYears(postSavingsTimelineInDays)
+            differenceInTime = calculations.calculate_diff(originalTimelineInYears, postSavingsTimelineInYears)
+        elif oneTimeSaving != None:
+            postSavingsTimelineInYears = calculations.calcTimeline(float(goal),float(float(principal)+float(oneTimeSaving)),float(compFreq),float(annualRate))
+            postSavingsTimelineStr = calculations.yearsToTotal(postSavingsTimelineInYears)
+            differenceInTime = calculations.calculate_diff(originalTimelineInYears, postSavingsTimelineInYears)
+        elif contSaving != None:
+            postSavingsTimelineInDays = calculations.continuousPaymentTimeline(float(goal),float(principal),float(compFreq),float(annualRate), float(contSaving), int(freq))
+            postSavingsTimelineStr = calculations.daysToTotal(postSavingsTimelineInDays)
+            postSavingsTimelineInYears = calculations.daysToYears(postSavingsTimelineInDays)
+            differenceInTime  = calculations.calculate_diff(originalTimelineInYears, postSavingsTimelineInYears)
+        else:
+            postSavingsTimelineStr = None
+            differenceInTime = None
+        return render_template("calculator.html", form=form, goal=goal, principal=principal, 
+                            annualRate=annualRate, nFreqLabel=nFreqLabel, originalTimelineStr=originalTimelineStr,
                             originalTimelineInYears=round(originalTimelineInYears, 2), 
                             postSavingsTimelineStr=postSavingsTimelineStr, differenceInTime = differenceInTime,
                             oneTimeSaving=oneTimeSaving, contSaving=contSaving, investFreqLabel=investFreqLabel)
+    else:
+        return render_template("calculator.html", form=form)
+
 
 
 if __name__ == '__main__':

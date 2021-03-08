@@ -1,8 +1,13 @@
 {% extends "layout.html" %}
 
+{% block css %}
+    <link rel="stylesheet" type= "text/css" href= "{{ url_for('static', filename='styles/calculator.css') }}">
+{% endblock css %}
+
 {% block content %}
-    <br>
-    <div class="content-section">
+<br>
+<div class="row">
+    <div class="content-section column">
         <form method="POST" action="">
             <!-- crsf token -->
             <fieldset class="form-group">
@@ -92,6 +97,46 @@
             <div class="form-group">
                 {{ form.submit(class="btn btn-outline-info") }}
             </div>
-        </form>
+        </form> 
     </div>
+    <div class="results column">
+        <div id="title">
+            <h1>Change in Retirement Date</h1>
+        </div>
+        
+        <div class="fi_detail">
+            <div class="user_specs row">
+                <div class="col">
+                    <h2>Goal: <span>${{ goal }}</span></h2>
+                </div>
+                <div class="col">
+                    <h2>Principal: <span>${{ principal }}</span></h2>
+                </div>
+                <div class="w-100"></div>
+                <div class="col">
+                    <h2>Annual Rate: <span>{{ annualRate }}%</span></h2>
+                </div>
+                <div class="col">
+                    <h2>Compound Frequency: <span>{{ nFreqLabel }}</span></h2>
+                </div>
+            </div>
+            <br>
+        <h3>Original Timeline(Time to FI if you stopped saving for FI): <br><span>{{ originalTimelineStr }}</span></h3>
+        <br>
+        {% if differenceInTime != None: %}
+            <h3>Time to FI with: </h3>
+            {% if oneTimeSaving != None: %}
+                <h4>A one-time payment of <span>${{ oneTimeSaving }}</span></h4>
+            {% endif %}
+            {% if contSaving != None: %}
+                <h4>A continuous payment of <span>${{ contSaving }} {{ investFreqLabel }}</span></h4>
+            {% endif %}
+            <br>
+            <h3>After Timeline: <br><span>{{ postSavingsTimelineStr }}</span></h3>
+            <br>
+            <h3>Time Saved: <br><span>{{ differenceInTime }}</span></h3>
+        {% endif %}
+        </div>
+    </div>
+</div>
 {% endblock content %}
